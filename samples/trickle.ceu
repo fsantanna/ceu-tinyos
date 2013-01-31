@@ -1,0 +1,24 @@
+@include(tinyos.ceu)
+@include(radio.ceu)
+@include(ds.ceu)
+
+var DS_trickle trickle;
+    trickle.tau_l = 2000;
+    trickle.tau_h = 10000;
+    trickle.k     = 2;
+
+@TOS_retry(200ms, @RADIO_start);
+
+C _printf();
+
+par do
+    emit trickle.go;
+    loop do
+        await trickle.ok_fired;
+_DBG("fired!\n");
+    end
+with
+    await 1s;
+    emit trickle.go_reset;
+    await FOREVER;
+end

@@ -1,0 +1,18 @@
+@include(tinyos.ceu)
+
+par do
+    loop do
+        await 250ms;
+        _Leds_led0Toggle();
+    end
+with
+    loop do
+        await 500ms;
+        _Leds_led1Toggle();
+    end
+with
+    loop do
+        await 1000ms;
+        _Leds_led2Toggle();
+    end
+end

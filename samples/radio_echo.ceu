@@ -1,0 +1,48 @@
+@include(radio.ceu)
+
+C _Msg = 2;
+C do
+    typedef struct {
+        nx_uint16_t cnt;
+    } Msg ;
+end
+
+@TOS_retry(1s, @RADIO_start);
+
+par do
+    loop do
+        var _message_t* pkt_recv = await RADIO_RECEIVE;
+        var _Msg* msg_recv;
+        finalize
+            msg_recv = _Radio_getPayload(pkt_recv,0);
+        with
+            nothing;
+        end
+        _Leds_set(msg_recv:cnt);
+    end
+
+with
+    var _message_t pkt_send;
+    var _Msg* msg_send;
+    finalize
+        msg_send = _Radio_getPayload(&pkt_send, sizeof<_Msg>);
+    with
+        nothing;
+    end
+    msg_send:cnt = 1;
+
+    loop do
+        await 2s;
+
+        loop do
+            _Radio_setDestination(&pkt_send, _AM_BROADCAST_ADDR);
+            _Radio_setPayloadLength(&pkt_send, sizeof<_Msg>);
+            if emit RADIO_SEND(&pkt_send) then
+                break;
+            end
+            await 1s;
+        end
+
+        msg_send:cnt = msg_send:cnt + 1;
+    end
+end

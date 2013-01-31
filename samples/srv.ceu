@@ -1,0 +1,38 @@
+@include(radio.ceu)
+
+input int PHOTO_READDONE;
+
+@TOS_retry(1s, @RADIO_start);
+_DBG("Radio started\n");
+
+var int count = 0;
+
+var Radio_receive recv;
+    recv.proto = 0;
+
+loop do
+    var _message_t* recv_msg = await recv.ok_received;
+    var int src = _Radio_getSource(recv_msg);
+
+    count = count + 1;
+    _Leds_set(count);
+    //_DBG("Requests = %d\n", count);
+
+    _Photo_read();
+    var int v = await PHOTO_READDONE;
+    //_DBG("Photo = %d\n", v);
+
+    var _message_t send_msg;
+        _Radio_setSource(&send_msg, _TOS_NODE_ID);
+        _Radio_setType(&send_msg, 0);
+        _Radio_setDestination(&send_msg, src);
+    var int* pay;
+    finalize
+        pay = _Radio_getPayload(&send_msg, sizeof<int>);
+    with
+        nothing;
+    end
+    *pay = count;
+    emit RADIO_SEND(&send_msg);
+end
+

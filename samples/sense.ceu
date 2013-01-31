@@ -1,0 +1,11 @@
+@include(tinyos.ceu);
+
+input int PHOTO_READDONE;
+var int data;
+
+loop do
+    await 100ms;
+    _Photo_read();
+    data = await PHOTO_READDONE;
+    _Leds_set(data/100);
+end

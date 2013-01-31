@@ -1,0 +1,22 @@
+DRIP protocol:
+==============
+
+http://www.tinyos.net/tinyos-2.x/doc/html/tep118.html
+http://docs.tinyos.net/tinywiki/index.php/Dissemination
+
+Comparison between Céu and nesC implementations:
+================================================
+
+https://docs.google.com/spreadsheet/ccc?key=0AiE_Lk_EDktfdHVIWDRKclJVbnRQeU1obVdhWWtUOWc
+
+Files:
+======
+
+- nesC:
+    - tos/                  // nesC implementation
+    - drip_all.nc           // all-in-one without blank lines and comments
+    - drip_impl.nc          // all-in-one but only "implementation" code
+
+- Céu:
+    - /samples/drip.ceu     // Céu implementation
+    - drip.ceu              // all-in-one without blank lines and comments

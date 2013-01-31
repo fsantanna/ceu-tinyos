@@ -1,0 +1,143 @@
+@include(tinyos.ceu)
+@include(radio.ceu)
+@include(ds.ceu)
+
+var DS_drip drip1 with
+    drip1.key = 1;
+    drip1.len = 2;
+end
+
+var DS_drip drip2 with
+    drip2.key = 2;
+    drip2.len = 2;
+end
+
+var DS_drip drip3 with
+    drip3.key = 3;
+    drip3.len = 2;
+end
+
+var DS_drip drip4 with
+    drip4.key = 4;
+    drip4.len = 2;
+end
+
+var DS_drip drip5 with
+    drip5.key = 5;
+    drip5.len = 2;
+end
+
+var DS_drip drip6 with
+    drip6.key = 6;
+    drip6.len = 2;
+end
+
+var DS_drip drip7 with
+    drip7.key = 7;
+    drip7.len = 2;
+end
+
+var DS_drip drip8 with
+    drip8.key = 8;
+    drip8.len = 2;
+end
+/*
+*/
+
+loop do
+    _Radio_start();
+    var int err = await RADIO_STARTDONE;
+    if err == _SUCCESS then
+        break;
+    end
+end
+
+var u16 counter1 = 0;
+var u16 counter2 = 0;
+var u16 counter3 = 0;
+var u16 counter4 = 0;
+var u16 counter5 = 0;
+var u16 counter6 = 0;
+var u16 counter7 = 0;
+var u16 counter8 = 0;
+/*
+*/
+
+par do
+    loop do
+        await 2s;
+        if _TOS_NODE_ID == 1 then
+            counter1 = counter1 + 1;
+            emit drip1.go_change = <s8*>&counter1;
+            counter2 = counter2 + 1;
+            emit drip2.go_change = <s8*>&counter2;
+            counter3 = counter3 + 1;
+            emit drip3.go_change = <s8*>&counter3;
+            counter4 = counter4 + 1;
+            emit drip4.go_change = <s8*>&counter4;
+            counter5 = counter5 + 1;
+            emit drip5.go_change = <s8*>&counter5;
+            counter6 = counter6 + 1;
+            emit drip6.go_change = <s8*>&counter6;
+            counter7 = counter7 + 1;
+            emit drip7.go_change = <s8*>&counter7;
+            counter8 = counter8 + 1;
+            emit drip8.go_change = <s8*>&counter8;
+/*
+if counter1 == 10 then
+    break;
+end
+*/
+        end
+    end
+with
+    loop do
+        var s8* p = await drip1.ok_changed;
+        counter1 = *p;
+        _DBG("counter1 = %d\n", counter1);
+    end
+with
+    loop do
+        var s8* p = await drip2.ok_changed;
+        counter2 = *p;
+        _DBG("counter2 = %d\n", counter2);
+    end
+with
+    loop do
+        var s8* p = await drip3.ok_changed;
+        counter3 = *p;
+        _DBG("counter3 = %d\n", counter3);
+    end
+with
+    loop do
+        var s8* p = await drip4.ok_changed;
+        counter4 = *p;
+        _DBG("counter4 = %d\n", counter4);
+    end
+with
+    loop do
+        var s8* p = await drip5.ok_changed;
+        counter5 = *p;
+        _DBG("counter5 = %d\n", counter5);
+    end
+with
+    loop do
+        var s8* p = await drip6.ok_changed;
+        counter6 = *p;
+        _DBG("counter6 = %d\n", counter6);
+    end
+with
+    loop do
+        var s8* p = await drip7.ok_changed;
+        counter7 = *p;
+        _DBG("counter7 = %d\n", counter7);
+    end
+with
+    loop do
+        var s8* p = await drip8.ok_changed;
+        counter8 = *p;
+        _DBG("counter8 = %d\n", counter8);
+    end
+/*
+*/
+end
