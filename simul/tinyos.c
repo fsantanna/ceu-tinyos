@@ -8,6 +8,8 @@ typedef u16 nxle_uint16_t;
 typedef s32 nx_int32_t;
 typedef u32 nx_uint32_t;
 
+typedef u8  bool;
+typedef u8  error_t;
 typedef u8  am_id_t;
 typedef u8  am_group_t;
 typedef u16 am_addr_t;
@@ -179,6 +181,9 @@ void* Radio_getPayload (message_t* msg, u8 len) {
 }
 void Radio_setPayloadLength(message_t* msg, u8 len) {
     msg->header.length = len;
+}
+uint8_t Radio_maxPayloadLength() {
+    return TOSH_DATA_LENGTH;
 }
 
 #define ceu_out_event_RADIO_SEND(a) RADIO_SEND(a)

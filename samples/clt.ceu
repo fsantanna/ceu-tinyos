@@ -3,9 +3,6 @@
 @TOS_retry(1s, @RADIO_start);
 _DBG("Radio started\n");
 
-var Radio_receive recv;
-    recv.proto = 0;
-
 loop do
     par/or do
         await 2s;
@@ -26,7 +23,7 @@ loop do
         *send_pay = v;
         emit RADIO_SEND(&send_msg);
 
-        var _message_t* recv_msg = await recv.ok_received;
+        var _message_t* recv_msg = await RADIO_RECEIVE;
         var int* recv_pay;
         finalize
             recv_pay = _Radio_getPayload(recv_msg, sizeof<int>);
@@ -49,7 +46,7 @@ loop do
             end
             _Leds_set(0);
         with
-            await recv.ok_received;
+            await RADIO_RECEIVE;
         end
         await FOREVER;
     end
