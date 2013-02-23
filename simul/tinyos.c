@@ -196,7 +196,7 @@ int RADIO_SEND (message_t* data) {
 #endif
         ret = ceu_out_event_F(OUT_RADIO_SEND, sizeof(message_t), data);
 #ifdef IN_RADIO_SENDDONE
-    MQ(IN_RADIO_SENDDONE, 1);
+    MQ(IN_RADIO_SENDDONE, SUCCESS);
 #endif
     return ret;
 }

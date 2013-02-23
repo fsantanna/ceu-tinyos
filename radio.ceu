@@ -17,8 +17,7 @@ output _message_t* RADIO_SEND;
 C _Radio_start_on;
 
 C nohold _Radio_start(), _Radio_setDestination(), _Radio_setPayloadLength(),
-         _Radio_setSource(),
-         _Radio_setType();
+         _Radio_setSource(), _Radio_setType();
 
 C pure _Radio_getPayload(), _Radio_maxPayloadLength(),
        _Radio_getSource(), _Radio_getType(), _Radio_getDestination();
@@ -28,7 +27,7 @@ C pure _Radio_getPayload(), _Radio_maxPayloadLength(),
 
 C _RADIO_ack_t = 0;
 
-var _nx_uint16_t radio_ack = 0;
+//var _nx_uint16_t radio_ack = 0;
 
 C do
     typedef nx_struct {
@@ -46,6 +45,26 @@ do
     return err_srt;
 end
 /*}-}*/´)
+
+C nohold _AM_receive(), _AM_send();
+
+C do
+    int AM_receive (message_t* msg, am_id_t tp, uint8_t len) {
+        am_addr_t dst = Radio_getDestination(msg);
+        am_id_t   _tp = Radio_getType(msg);
+        return (tp==_tp)
+            && ((dst==AM_BROADCAST_ADDR) || (dst==TOS_NODE_ID))
+            && (Radio_getPayload(msg, len)!=NULL);
+    }
+
+    void* AM_send (message_t* msg, am_addr_t dst, am_id_t tp, uint8_t len) {
+        Radio_setSource(msg, TOS_NODE_ID);
+        Radio_setDestination(msg, dst);
+        Radio_setType(msg, tp);
+        Radio_setPayloadLength(msg, len);
+        return Radio_getPayload(msg, len);
+    }
+end
 
 /*
 class Radio_receive with

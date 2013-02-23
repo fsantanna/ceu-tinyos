@@ -23,12 +23,7 @@ loop do
         _Radio_setSource(&send_msg, _TOS_NODE_ID);
         _Radio_setType(&send_msg, 0);
         _Radio_setDestination(&send_msg, src);
-    var int* pay;
-    finalize
-        pay = _Radio_getPayload(&send_msg, sizeof<int>);
-    with
-        nothing;
-    end
+    var int* pay = _Radio_getPayload(&send_msg, sizeof<int>);
     *pay = count;
     emit RADIO_SEND(&send_msg);
 end

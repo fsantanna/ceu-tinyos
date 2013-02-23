@@ -11,24 +11,14 @@ end
 
 par do
     loop do
-        var _message_t* pkt_recv = await RADIO_RECEIVE;
-        var _Msg* msg_recv;
-        finalize
-            msg_recv = _Radio_getPayload(pkt_recv,0);
-        with
-            nothing;
-        end
+        tmp _message_t* pkt_recv = await RADIO_RECEIVE;
+        tmp _Msg* msg_recv = _Radio_getPayload(pkt_recv,0);
         _Leds_set(msg_recv:cnt);
     end
 
 with
     var _message_t pkt_send;
-    var _Msg* msg_send;
-    finalize
-        msg_send = _Radio_getPayload(&pkt_send, sizeof<_Msg>);
-    with
-        nothing;
-    end
+    var _Msg* msg_send = _Radio_getPayload(&pkt_send, sizeof<_Msg>);
     msg_send:cnt = 1;
 
     loop do

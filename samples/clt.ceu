@@ -14,22 +14,12 @@ loop do
             _Radio_setSource(&send_msg, _TOS_NODE_ID);
             _Radio_setType(&send_msg, 0);
             _Radio_setDestination(&send_msg, 10);
-        var int* send_pay;
-        finalize
-            send_pay = _Radio_getPayload(&send_msg, sizeof<int>);
-        with
-            nothing;
-        end
+        var int* send_pay = _Radio_getPayload(&send_msg, sizeof<int>);
         *send_pay = v;
         emit RADIO_SEND(&send_msg);
 
         var _message_t* recv_msg = await RADIO_RECEIVE;
-        var int* recv_pay;
-        finalize
-            recv_pay = _Radio_getPayload(recv_msg, sizeof<int>);
-        with
-            nothing;
-        end
+        var int* recv_pay = _Radio_getPayload(recv_msg, sizeof<int>);
 
         _DBG("Received = %d\n", *recv_pay);
         _Leds_set(*recv_pay/100);

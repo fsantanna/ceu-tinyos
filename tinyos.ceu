@@ -8,10 +8,10 @@ C constant _FAIL, _EBUSY, _ESIZE, _SUCCESS, _TOS_NODE_ID;
 C nohold _DBG();
 C _Photo_read();
 
-C _Leds_set();
-C _Leds_led0Toggle(), _Leds_led0On(), _Leds_led0Off();
-C _Leds_led1Toggle(), _Leds_led1On(), _Leds_led1Off();
-C _Leds_led2Toggle(), _Leds_led2On(), _Leds_led2Off();
+C nohold _Leds_set();
+C nohold _Leds_led0Toggle(), _Leds_led0On(), _Leds_led0Off();
+C nohold _Leds_led1Toggle(), _Leds_led1On(), _Leds_led1Off();
+C nohold _Leds_led2Toggle(), _Leds_led2On(), _Leds_led2Off();
 
 /*
 // TODO

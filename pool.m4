@@ -8,7 +8,8 @@ define(POOL, `/*{-{*/
     // $2 = type
     // $3 = size
 
-C _$1_init(), _$1_empty(), _$1_size(), _$1_maxSize(), _$1_get(), _$1_put();
+C _$1_init(), _$1_empty(), _$1_size(), _$1_maxSize(), _$1_get();
+C nohold _$1_put();
 
 C do
   uint8_t $1_free;
