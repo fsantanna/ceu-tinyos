@@ -1,17 +1,8 @@
-typedef int64_t  s64;
-typedef uint64_t u64;
-typedef int32_t  s32;
-typedef uint32_t u32;
-typedef int16_t  s16;
-typedef uint16_t u16;
-typedef int8_t    s8;
-typedef uint8_t   u8;
-
 /*
 // increases code size
 #define ceu_out_pending()   (!call Scheduler.isEmpty() || !q_isEmpty(&Q_EXTS))
 */
-#define ceu_out_wclock(us)  { if ((us) != CEU_WCLOCK_NONE)          \
+#define ceu_out_wclock(us)  { if ((us) != CEU_WCLOCK_INACTIVE) \
                                 call Timer.startOneShot((us)/1000); }
                             // TODO: "binary" time
 

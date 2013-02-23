@@ -65,9 +65,6 @@ do
 
     loop do
         var int c = 0;  // counter
-        var u16 t;      // timer
-
-        t = (tau/2) + _rand() % (tau/2);
 
         par/or do
             await (tau) ms;
@@ -84,6 +81,8 @@ do
                 c = c + 1;
             end
         with
+            tmp u16 t;      // timer
+            t = (tau/2) + _rand() % (tau/2);
             await (t)ms;
             if c < _DISSEMINATION_K then
                 emit this.ok_fired;
@@ -108,12 +107,8 @@ do
         _Radio_setSource(&msg, _TOS_NODE_ID);
         _Radio_setDestination(&msg, _AM_BROADCAST_ADDR);
 
-    var _dissemination_message_t* pay;
-    finalize
-        pay = _Radio_getPayload(&msg, sizeof<_dissemination_message_t>);
-    with
-        nothing;    // msg_meta/pay_meta have the same scope
-    end
+    var _dissemination_message_t* pay =
+        _Radio_getPayload(&msg, sizeof<_dissemination_message_t>);
     pay:key = this.key;
 
     par do
@@ -156,15 +151,11 @@ do
     with
         // RECEIVE META and DATA MESSAGES
         loop do
-            var _message_t* gsm = await RADIO_RECEIVE;
-            var int tp = _Radio_getType(gsm);
+            tmp _message_t* gsm = await RADIO_RECEIVE;
+            tmp int tp = _Radio_getType(gsm);
 
-            var _dissemination_message_t* yap;
-            finalize
-                yap = _Radio_getPayload(gsm, sizeof<_dissemination_message_t>+this.len);
-            with
-                nothing;    // gsm/yap have the same scope
-            end
+            tmp _dissemination_message_t* yap =
+                _Radio_getPayload(gsm, sizeof<_dissemination_message_t>+this.len);
 
             if (tp==_DISSEMINATION_PROTO or tp==_DISSEMINATION_PROTO+1) and
                 yap and (yap:key==this.key) then
