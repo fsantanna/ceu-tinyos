@@ -13,60 +13,52 @@ end
 */
 
 //var u16 buf1=0;
-var DS_drip drip1 with
+var DS_drip drip1;
     drip1.key = 1;
     drip1.len = 2;
     //drip1.buf = &buf1;
-end
 
 //var u16 buf2;
-var DS_drip drip2 with
+var DS_drip drip2;
     drip2.key = 2;
     drip2.len = 2;
     //drip2.buf = &buf2;
-end
 
 //var u16 buf3;
-var DS_drip drip3 with
+var DS_drip drip3;
     drip3.key = 3;
     drip3.len = 2;
     //drip3.buf = &buf3;
-end
 
 //var u16 buf4;
-var DS_drip drip4 with
+var DS_drip drip4;
     drip4.key = 4;
     drip4.len = 2;
     //drip4.buf = &buf4;
-end
 
 //var u16 buf5;
-var DS_drip drip5 with
+var DS_drip drip5;
     drip5.key = 5;
     drip5.len = 2;
     //drip5.buf = &buf5;
-end
 
 //var u16 buf6;
-var DS_drip drip6 with
+var DS_drip drip6;
     drip6.key = 6;
     drip6.len = 2;
     //drip6.buf = &buf6;
-end
 
 //var u16 buf7;
-var DS_drip drip7 with
+var DS_drip drip7;
     drip7.key = 7;
     drip7.len = 2;
     //drip7.buf = &buf7;
-end
 
 //var u16 buf8;
-var DS_drip drip8 with
+var DS_drip drip8;
     drip8.key = 8;
     drip8.len = 2;
     //drip8.buf = &buf8;
-end
 /*
 */
 
