@@ -17,14 +17,23 @@ C do
     } Cnt;
 end
 
-@TOS_retry(1s, @RADIO_start);
+loop do
+    var int err = _Radio_start();
+    if err == _SUCCESS then
+        err = await RADIO_STARTDONE;
+        if err == _SUCCESS then
+            break;
+        end
+    end
+    await 1s;
+end
 
 event void retry;
 
 par do
     loop do
         var _message_t* msg = await RADIO_RECEIVE;
-        tmp _Cnt* data = _Radio_getPayload(msg, sizeof<_Cnt>);
+        var _Cnt* data = _Radio_getPayload(msg, sizeof<_Cnt>);
         data:cnt = data:cnt + 1;
         _Leds_set(data:cnt);
         await 1s;
@@ -55,7 +64,7 @@ with
     if _TOS_NODE_ID == 0 then
         loop do
             var _message_t msg;
-            tmp _Cnt* data = _Radio_getPayload(&msg, sizeof<_Cnt>);
+            var _Cnt* data = _Radio_getPayload(&msg, sizeof<_Cnt>);
             data:cnt = 1;
             _Radio_setDestination(&msg, 1);
             _Radio_setPayloadLength(&msg, sizeof<_Cnt>);

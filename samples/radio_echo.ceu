@@ -7,12 +7,21 @@ C do
     } Msg ;
 end
 
-@TOS_retry(1s, @RADIO_start);
+loop do
+    var int err = _Radio_start();
+    if err == _SUCCESS then
+        err = await RADIO_STARTDONE;
+        if err == _SUCCESS then
+            break;
+        end
+    end
+    await 1s;
+end
 
 par do
     loop do
-        tmp _message_t* pkt_recv = await RADIO_RECEIVE;
-        tmp _Msg* msg_recv = _Radio_getPayload(pkt_recv,0);
+        var _message_t* pkt_recv = await RADIO_RECEIVE;
+        var _Msg* msg_recv = _Radio_getPayload(pkt_recv,0);
         _Leds_set(msg_recv:cnt);
     end
 

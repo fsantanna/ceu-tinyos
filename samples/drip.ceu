@@ -24,6 +24,7 @@ var DS_drip drip2;
     drip2.len = 2;
     //drip2.buf = &buf2;
 
+/*
 //var u16 buf3;
 var DS_drip drip3;
     drip3.key = 3;
@@ -59,18 +60,17 @@ var DS_drip drip8;
     drip8.key = 8;
     drip8.len = 2;
     //drip8.buf = &buf8;
-/*
 */
 
 var u16 counter1 = 0;
 var u16 counter2 = 0;
+/*
 var u16 counter3 = 0;
 var u16 counter4 = 0;
 var u16 counter5 = 0;
 var u16 counter6 = 0;
 var u16 counter7 = 0;
 var u16 counter8 = 0;
-/*
 */
 
 par do
@@ -94,6 +94,7 @@ with
             emit drip1.go_change = <s8*>&counter1;
             counter2 = counter2 + 1;
             emit drip2.go_change = <s8*>&counter2;
+/*
             counter3 = counter3 + 1;
             emit drip3.go_change = <s8*>&counter3;
             counter4 = counter4 + 1;
@@ -109,7 +110,6 @@ with
 if counter1 == 10 then
     break;
 end
-/*
 */
         end
     end
@@ -125,6 +125,7 @@ with
         counter2 = *p;
         _DBG("counter2 = %d\n", counter2);
     end
+/*
 with
     loop do
         tmp s8* p = await drip3.ok_changed;
@@ -161,6 +162,5 @@ with
         counter8 = *p;
         _DBG("counter8 = %d\n", counter8);
     end
-/*
 */
 end

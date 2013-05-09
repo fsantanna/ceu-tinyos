@@ -59,7 +59,6 @@ implementation
 {
     u32 old;
 
-    int RET = 0;
     #include "tinyos.c"
     #include "_ceu_code.cceu"
 
@@ -101,30 +100,26 @@ implementation
 
 #ifdef IO_PHOTO
     event void Photo.readDone(error_t err, uint16_t val) {
-        int v = val;
-        ceu_go_event(IN_PHOTO_READDONE, &v);
+        ceu_go_event(IN_PHOTO_READDONE, (void*)val);
     }
 #endif // IO_PHOTO
 
 #ifdef IO_TEMP
     event void Temp.readDone(error_t err, uint16_t val) {
-        int v = val;
-        ceu_go_event(IN_TEMP_READDONE, &v);
+        ceu_go_event(IN_TEMP_READDONE, (void*)val);
     }
 #endif // IO_TEMP
 
 #ifdef IO_RADIO
     event void RadioControl.startDone (error_t err) {
 #ifdef IN_RADIO_STARTDONE
-        int v = err;
-        ceu_go_event(IN_RADIO_STARTDONE, &v);
+        ceu_go_event(IN_RADIO_STARTDONE, (void*)(int)err);
 #endif
     }
 
     event void RadioControl.stopDone (error_t err) {
 #ifdef IN_RADIO_STOPDONE
-        int v = err;
-        ceu_go_event(IN_RADIO_STOPDONE, &v);
+        ceu_go_event(IN_RADIO_STOPDONE, (void*)(int)err);
 #endif
     }
 
@@ -132,8 +127,7 @@ implementation
     {
         //dbg("APP", "sendDone: %d %d\n", data[0], data[1]);
 #ifdef IN_RADIO_SENDDONE
-        int v = err;
-        ceu_go_event(IN_RADIO_SENDDONE, &v);
+        ceu_go_event(IN_RADIO_SENDDONE, (void*)(int)err);
 #endif
     }
 
@@ -151,16 +145,14 @@ implementation
     event void SerialControl.startDone (error_t err)
     {
 #ifdef IN_SERIAL_STARTDONE
-        int v = err;
-        ceu_go_event(IN_SERIAL_STARTDONE, &v);
+        ceu_go_event(IN_SERIAL_STARTDONE, (void*)(int)err);
 #endif
     }
 
     event void SerialControl.stopDone (error_t err)
     {
 #ifdef IN_SERIAL_STOPDONE
-        int v = err;
-        ceu_go_event(IN_SERIAL_STOPDONE, &v);
+        ceu_go_event(IN_SERIAL_STOPDONE, (void*)(int)err);
 #endif
     }
 
@@ -168,8 +160,7 @@ implementation
     {
         //dbg("APP", "sendDone: %d %d\n", data[0], data[1]);
 #ifdef IN_SERIAL_SENDDONE
-        int v = err;
-        ceu_go_event(IN_SERIAL_SENDDONE, &v);
+        ceu_go_event(IN_SERIAL_SENDDONE, (void*)(int)err);
 #endif
     }
     
@@ -189,7 +180,6 @@ implementation
     event void DisseminationValue1.changed () {
 #ifdef IN_DISSEMINATION_VALUE1
         const uint16_t* v = call DisseminationValue1.get();
-    dbg("DIP", "1 == %d\n", *v);
         ceu_go_event(IN_DISSEMINATION_VALUE1, v);
 #endif
     }

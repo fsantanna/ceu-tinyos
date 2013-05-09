@@ -133,8 +133,8 @@ do
     with
         // AWAIT FOR CHANGES FROM THE APP
         loop do
-            await go_change;
-            _memcpy(pay:data, go_change, this.len);
+            tmp s8* v = await go_change;
+            _memcpy(pay:data, v, this.len);
 
             seqno = seqno >> 16;                        // increment seqno
             seqno = seqno + 1;
