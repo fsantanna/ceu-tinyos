@@ -1,0 +1,8 @@
+# INSTALATION
+
+> git clone https://github.com/fsantanna/ceu-tinyos
+> cd ceu-tinyos
+> make CEUFILE=samples/<example> micaz
+
+# Requires TinyOS:
+# (http://docs.tinyos.net/tinywiki/index.php/Automatic_installation)
