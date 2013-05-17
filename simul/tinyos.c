@@ -84,9 +84,9 @@ int Serial_start ()
     static int n2 = 0;
     if (ret == SUCCESS) {
         if (n2 < CEU_SEQN_SERIAL_STARTDONE)
-            ret = MQ(IN_SERIAL_STARTDONE, v2[n2++]);
+            ret = MQ(CEU_IN_SERIAL_STARTDONE, v2[n2++]);
         else
-            ret = MQ(IN_SERIAL_STARTDONE, SUCCESS);
+            ret = MQ(CEU_IN_SERIAL_STARTDONE, SUCCESS);
         ret = ((ret==0) ? SUCCESS : EBUSY);
     }
 
@@ -144,9 +144,9 @@ int Radio_start ()
     static int n2 = 0;
     if (ret == SUCCESS) {
         if (n2 < CEU_SEQN_RADIO_STARTDONE)
-            ret = MQ(IN_RADIO_STARTDONE, v2[n2++]);
+            ret = MQ(CEU_IN_RADIO_STARTDONE, v2[n2++]);
         else
-            ret = MQ(IN_RADIO_STARTDONE, SUCCESS);
+            ret = MQ(CEU_IN_RADIO_STARTDONE, SUCCESS);
         ret = ((ret==0) ? SUCCESS : EBUSY);
     }
 
@@ -194,14 +194,14 @@ int RADIO_SEND (message_t* data) {
 #ifdef TOS_COLLISION
     if (rand()%100 >= TOS_COLLISION)
 #endif
-        ret = ceu_out_event_F(OUT_RADIO_SEND, sizeof(message_t), data);
-#ifdef IN_RADIO_SENDDONE
-    MQ(IN_RADIO_SENDDONE, SUCCESS);
+        ret = ceu_out_event_F(CEU_OUT_RADIO_SEND, sizeof(message_t), data);
+#ifdef CEU_IN_RADIO_SENDDONE
+    MQ(CEU_IN_RADIO_SENDDONE, SUCCESS);
 #endif
     return ret;
 }
 
-#ifdef FUNC_Photo_read
+#ifdef CEU_FUN_Photo_read
 int Photo_read ()
 {
     static int v1[] = CEU_SEQV_Photo_read;
@@ -212,14 +212,14 @@ int Photo_read ()
     else
         ret = SUCCESS;
 
-#ifdef IN_PHOTO_READDONE
+#ifdef CEU_IN_PHOTO_READDONE
     static int v2[] = CEU_SEQV_PHOTO_READDONE;
     static int n2 = 0;
     if (ret == SUCCESS) {
         if (n2 < CEU_SEQN_PHOTO_READDONE)
-            MQ(IN_PHOTO_READDONE, v2[n2++]);
+            MQ(CEU_IN_PHOTO_READDONE, v2[n2++]);
         else
-            MQ(IN_PHOTO_READDONE, v2[n2-1]);
+            MQ(CEU_IN_PHOTO_READDONE, v2[n2-1]);
     }
 #endif
 
@@ -227,7 +227,7 @@ int Photo_read ()
 }
 #endif
 
-#ifdef FUNC_Temp_read
+#ifdef CEU_FUN_Temp_read
 int Temp_read ()
 {
     static int v1[] = CEU_SEQV_Temp_read;
@@ -238,14 +238,14 @@ int Temp_read ()
     else
         ret = SUCCESS;
 
-#ifdef IN_TEMP_READDONE
+#ifdef CEU_IN_TEMP_READDONE
     static int v2[] = CEU_SEQV_TEMP_READDONE;
     static int n2 = 0;
     if (ret == SUCCESS) {
         if (n2 < CEU_SEQN_TEMP_READDONE)
-            MQ(IN_TEMP_READDONE, v2[n2++]);
+            MQ(CEU_IN_TEMP_READDONE, v2[n2++]);
         else
-            MQ(IN_TEMP_READDONE, v2[n2-1]);
+            MQ(CEU_IN_TEMP_READDONE, v2[n2-1]);
     }
 #endif
 
@@ -265,64 +265,64 @@ void Leds_dbg () {
     DBG("leds (%d %d %d)\n", (leds&(1<<2))>>2, (leds&(1<<1))>>1, leds&(1<<0));
 }
 
-#ifdef FUNC_Leds_set
+#ifdef CEU_FUN_Leds_set
 void Leds_set (int v) {
     leds = v;
     Leds_dbg();
 }
 #endif
 
-#ifdef FUNC_Leds_led0On
+#ifdef CEU_FUN_Leds_led0On
 void Leds_led0On () {
     leds |= 1 << 0;
     Leds_dbg();
 }
 #endif
-#ifdef FUNC_Leds_led0Off
+#ifdef CEU_FUN_Leds_led0Off
 void Leds_led0Off () {
     leds &= ~(1 << 0);
     Leds_dbg();
 }
 #endif
-#ifdef FUNC_Leds_led0Toggle
+#ifdef CEU_FUN_Leds_led0Toggle
 void Leds_led0Toggle () {
     leds ^= 1 << 0;
     Leds_dbg();
 }
 #endif
 
-#ifdef FUNC_Leds_led1On
+#ifdef CEU_FUN_Leds_led1On
 void Leds_led1On () {
     leds |= 1 << 1;
     Leds_dbg();
 }
 #endif
-#ifdef FUNC_Leds_led1Off
+#ifdef CEU_FUN_Leds_led1Off
 void Leds_led1Off () {
     leds &= ~(1 << 1);
     Leds_dbg();
 }
 #endif
-#ifdef FUNC_Leds_led1Toggle
+#ifdef CEU_FUN_Leds_led1Toggle
 void Leds_led1Toggle () {
     leds ^= 1 << 1;
     Leds_dbg();
 }
 #endif
 
-#ifdef FUNC_Leds_led2On
+#ifdef CEU_FUN_Leds_led2On
 void Leds_led2On () {
     leds |= 1 << 2;
     Leds_dbg();
 }
 #endif
-#ifdef FUNC_Leds_led2Off
+#ifdef CEU_FUN_Leds_led2Off
 void Leds_led2Off () {
     leds &= ~(1 << 2);
     Leds_dbg();
 }
 #endif
-#ifdef FUNC_Leds_led2Toggle
+#ifdef CEU_FUN_Leds_led2Toggle
 void Leds_led2Toggle () {
     leds ^= 1 << 2;
     Leds_dbg();
