@@ -7,252 +7,27 @@ changequote(`,´)
 
 @define(AM_TYPE_ACK, 0);
 
-C nohold _memcpy();
+native nohold _memcpy();
 
-input  int         RADIO_STARTDONE;
-input  int         RADIO_SENDDONE;
-input  _message_t* RADIO_RECEIVE;
-output _message_t* RADIO_SEND;
+native _radio_senddone_t, _radio_receive_t;
 
-C _Radio_start_on;
+input  int                RADIO_STARTDONE;
+input  _radio_senddone_t* RADIO_SENDDONE;
+input  _radio_receive_t*  RADIO_RECEIVE;
+output _message_t*        RADIO_SEND;
 
-C nohold _Radio_start(), _Radio_setDestination(), _Radio_setPayloadLength(),
-         _Radio_setSource(), _Radio_setType();
+native _Radio_start_on;
 
-C pure _Radio_getPayload(), _Radio_maxPayloadLength(),
-       _Radio_getSource(), _Radio_getType(), _Radio_getDestination();
+native nohold _Radio_start(), _Radio_clear(),
+         _Radio_setDestination(), _Radio_setPayloadLength(),
+         _Radio_setSource(), _Radio_setType(), _Radio_setGroup();
+
+native pure _Radio_getPayload(), _Radio_maxPayloadLength(), 
+            _Radio_payloadLength(), _Radio_group(),
+            _Radio_source(), _Radio_type(), _Radio_destination();
 
 // TODO
 //deterministic _Radio_setDestination with _Leds_set, _Leds_led0Toggle;
 
-C _RADIO_ack_t = 0;
 
-//var _nx_uint16_t radio_ack = 0;
-
-C do
-    typedef nx_struct {
-        nx_uint16_t ack;
-    } RADIO_ack_t;
-end
-
-@define(RADIO_start, `/*{-{*/
-do
-    var int err_srt = _Radio_start();
-    if err_srt == _SUCCESS then
-        err_srt = await RADIO_STARTDONE;
-        return err_srt;
-    end
-    return err_srt;
-end
-/*}-}*/´)
-
-C nohold _AM_receive(), _AM_send();
-
-C do
-    int AM_receive (message_t* msg, am_id_t tp, uint8_t len) {
-        am_addr_t dst = Radio_getDestination(msg);
-        am_id_t   _tp = Radio_getType(msg);
-        return (tp==_tp)
-            && ((dst==AM_BROADCAST_ADDR) || (dst==TOS_NODE_ID))
-            && (Radio_getPayload(msg, len)!=NULL);
-    }
-
-    void* AM_send (message_t* msg, am_addr_t dst, am_id_t tp, uint8_t len) {
-        Radio_setSource(msg, TOS_NODE_ID);
-        Radio_setDestination(msg, dst);
-        Radio_setType(msg, tp);
-        Radio_setPayloadLength(msg, len);
-        return Radio_getPayload(msg, len);
-    }
-end
-
-/*
-class Radio_receive with
-    var   u16           proto;
-    event _message_t*   ok_received;
-do
-    loop do
-        var _message_t* msg = await RADIO_RECEIVE;
-        var int dst = _Radio_getDestination(msg);
-        var int tp  = _Radio_getType(msg);
-        if _Radio_start_on and (tp==this.proto) and
-            ((dst==_AM_BROADCAST_ADDR) or (dst==_TOS_NODE_ID)) then
-            emit ok_received=msg;
-        end
-    end
-end
-*/
-
-define(RADIO_receive, `/*{-{*/
-dnl [ 1: msg_proto ] message protocol type
-dnl [ 2: pay_type  ] message payload type
-dnl [ 3: pay_ptr   ] message payload pointer
-loop do
-    var _message_t* msg_rcv = await RADIO_RECEIVE;
-    var int dst = _Radio_getDestination(msg_rcv);
-    var int tp  = _Radio_getType(msg_rcv);
-    if _Radio_start_on and (tp==$1) and
-        ((dst==_AM_BROADCAST_ADDR) or (dst==_TOS_NODE_ID)) then
-        @ifelse($2, null,
-            `return msg_rcv;´,
-            `$3 = <$2*> _Radio_getPayload(msg_rcv, sizeof<$2>);
-             if $3 != null then
-                return msg_rcv;
-             end´)
-    end
-end
-/*}-}*/´)
-
-@define(RADIO_receive_ack, `/*{-{*/
-dnl [ 1: msg_proto ] message protocol type
-dnl [ 2: pay_type  ] message payload type
-dnl [ 3: pay_ptr   ] message payload pointer
-do
-    var _message_t* msg_ack := @RADIO_receive($1, $2, $3);
-    var _RADIO_ack_t* pay_ack := _Radio_getPayload(msg_ack, sizeof<_RADIO_ack_t>);
-    if pay_ack != null then
-        var _message_t ack;
-        var int err_ack = @RADIO_send_value(&ack, _Radio_getSource(msg_ack), 
-                                    AM_TYPE_ACK, _RADIO_ack_t, &pay_ack:ack);
-    end
-    return msg_ack;
-end
-/*}-}*/´)
-
-
-@define(RADIO_receive_empty, `/*{-{*/
-dnl [ 1: msg_proto ] message protocol type
-loop do
-    var _message_t* msg_rcv = await RADIO_RECEIVE;
-    var int dst = _Radio_getDestination(msg_rcv);
-    var int tp  = _Radio_getType(msg_rcv);
-    if _Radio_start_on and (tp==$1) and
-        ((dst==_AM_BROADCAST_ADDR) or (dst==_TOS_NODE_ID)) then
-        return msg_rcv;
-    end
-end
-/*}-}*/´)
-
-@define(RADIO_msg, `/*{-{*/
-dnl [ 1: msg_ref   ] message reference
-dnl [ 2: msg_proto ] message protocol type
-dnl [ 3: pay_type  ] message payload type
-do
-    _Radio_setSource($1, _TOS_NODE_ID);
-    _Radio_setType($1, $2);
-    @ifelse($3, null,
-        `return _Radio_getPayload($1, 0);´,
-        `var void* pay_msg := _Radio_getPayload($1, sizeof<$3>);
-         if pay_msg != null then
-            _Radio_setPayloadLength($1, sizeof<$3>);
-         end
-         return <$3*>pay_msg;´)
-end
-/*}-}*/´)
-
-@define(RADIO_send, `/*{-{*/
-dnl [ 1: msg_ref ] message reference
-dnl [ 2: msg_dst ] message destination address
-do
-    _Radio_setDestination($1, $2);
-    if emit RADIO_SEND($1) then
-        return _SUCCESS;
-    else
-        return _EBUSY;
-    end
-end
-/*}-}*/´)
-
-@define(RADIO_send_ack, `/*{-{*/
-dnl [ 1: msg_ref ] message reference
-dnl [ 2: msg_dst ] message destination address
-dnl [ 3: timeout ] retry timeout
-do
-    var _RADIO_ack_t* msg_ack := _Radio_getPayload($1, sizeof<_RADIO_ack_t>);
-    radio_ack = radio_ack + 1;
-    msg_ack:ack = radio_ack;
- 
-    var int v =
-        loop do
-            par/or do
-                var int err_ack = @RADIO_send($1, $2);
-                if err_ack == _SUCCESS then
-                    loop do
-                        var _RADIO_ack_t* ret_pay;
-                        var _message_t* ret_msg := @RADIO_receive(AM_TYPE_ACK,
-                                                    _RADIO_ack_t, ret_pay);
-                        if ret_pay:ack == msg_ack:ack then
-                            return msg_ack:ack;
-                        end
-                    end
-                else
-                    await FOREVER;
-                end
-            with
-                await 1s;//$3; // reply timeout
-            end
-        end;
-end    
-/*}-}*/´)
-
-@define(RADIO_send_empty, `/*{-{*/
-dnl [ 1: msg_ref   ] message reference
-dnl [ 2: msg_dst   ] message destination address
-dnl [ 3: msg_proto ] message protocol type
-do
-    var void* pay_snd := @RADIO_msg($1, $3, null);
-    var int err_snd = @RADIO_send($1, $2);
-    return err_snd;
-end
-/*}-}*/´)
-
-@define(RADIO_send_value, `/*{-{*/
-dnl [ 1: msg_ref   ] message reference
-dnl [ 2: msg_dst   ] message destination address
-dnl [ 3: msg_proto ] message protocol type
-dnl [ 4: pay_type  ] message payload type
-dnl [ 5: pay_ref   ] message payload reference
-do
-    var $4* pay_snd := @RADIO_msg($1, $3, $4);
-    if pay_snd == null then
-        return _ESIZE;
-    end
-    _memcpy(pay_snd, $5, sizeof<$4>);
-    var int err_snd = @RADIO_send($1, $2);
-    return err_snd;
-end
-/*}-}*/´)
-
-@define(RADIO_send_value_ack, `/*{-{*/
-dnl [ 1: msg_ref   ] message reference
-dnl [ 2: msg_dst   ] message destination address
-dnl [ 3: msg_proto ] message protocol type
-dnl [ 4: pay_type  ] message payload type
-dnl [ 5: pay_ref   ] message payload reference
-dnl [ 6: timeout   ] retry timeout
-do
-    var $4* pay_ack := @RADIO_msg($1, $3, $4);
-    if pay_ack == null then
-        return _ESIZE;
-    end
-    _memcpy(pay_ack, $5, sizeof<$4>);
-
-    @RADIO_send_ack($1, $2, $6);
-end    
-/*}-}*/´) 
-
-@define(RADIO_bcast_ack, `/*{-{*/
-dnl [ 1: msg_ref  ] message reference
-dnl [ 2: neighs   ] bitmap of neighbours
-dnl [ 3: n_nodes  ] length of the bitmap of neighbours
-dnl [ 4: timeout  ] retry timeout
-do
-    loop to, $3 do
-        if _bm_get($2, to) then
-            @RADIO_send_ack($1, to, $4);
-        end
-    end
-end
-/*}-}*/´)
- 
 /*}-}*/dnl

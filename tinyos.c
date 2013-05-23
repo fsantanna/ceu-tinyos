@@ -73,7 +73,17 @@ int Temp_read () {
 #endif
 
 // RADIO
-#ifdef IO_RADIO
+#ifdef CEU_IO_RADIO
+
+typedef struct {
+    message_t* msg;
+    error_t    error;
+} radio_senddone_t;
+
+typedef struct {
+    message_t** msg_ptr;
+    u8          len;
+} radio_receive_t;
 
 int Radio_start_on = 1;
 
@@ -83,6 +93,12 @@ error_t Radio_start () {
 error_t Radio_stop () {
     return call RadioControl.stop();
 }
+
+#ifdef CEU_FUN_Radio_clear
+void Radio_clear (message_t* msg) {
+    call RadioPacket.clear(msg);
+}
+#endif
 
 void* Radio_getPayload (message_t* msg, uint8_t len) {
     return call RadioPacket.getPayload(msg, len);
@@ -100,7 +116,7 @@ uint8_t Radio_maxPayloadLength () {
     return call RadioPacket.maxPayloadLength();
 }
 
-am_addr_t Radio_getSource (message_t* msg) {
+am_addr_t Radio_source (message_t* msg) {
     return call RadioAMPacket.source(msg);
 }
 
@@ -108,7 +124,7 @@ void Radio_setSource (message_t* msg, am_addr_t addr) {
     return call RadioAMPacket.setSource(msg, addr);
 }
 
-am_addr_t Radio_getDestination (message_t* msg) {
+am_addr_t Radio_destination (message_t* msg) {
     return call RadioAMPacket.destination(msg);
 }
 
@@ -116,12 +132,20 @@ void Radio_setDestination (message_t* msg, am_addr_t addr) {
     return call RadioAMPacket.setDestination(msg, addr);
 }
 
-am_id_t Radio_getType (message_t* msg) {
+am_id_t Radio_type (message_t* msg) {
     return call RadioAMPacket.type(msg);
 }
 
 void Radio_setType (message_t* msg, am_id_t id) {
     call RadioAMPacket.setType(msg, id);
+}
+
+am_group_t Radio_group (message_t* msg) {
+    return call RadioAMPacket.group(msg);
+}
+
+void Radio_setGroup (message_t* msg, am_group_t id) {
+    call RadioAMPacket.setGroup(msg, id);
 }
 
 #ifdef CEU_OUT_RADIO_SEND
@@ -134,9 +158,20 @@ int RADIO_SEND (message_t *msg)  {
 }
 #endif
 
-#endif  IO_RADIO
+#endif  // CEU_IO_RADIO
 
 // SERIAL
+#ifdef CEU_IO_SERIAL
+
+typedef struct {
+    message_t* msg;
+    error_t    error;
+} serial_senddone_t;
+
+typedef struct {
+    message_t** msg_ptr;
+    u8          len;
+} serial_receive_t;
 
 int Serial_start_on = 1;
 
@@ -148,6 +183,12 @@ error_t Serial_start () {
 #ifdef CEU_FUN_Serial_stop
 error_t Serial_stop () {
     return call SerialControl.stop();
+}
+#endif
+
+#ifdef CEU_FUN_Serial_clear
+void Serial_clear (message_t* msg) {
+    call SerialPacket.clear(msg);
 }
 #endif
 
@@ -175,8 +216,8 @@ uint8_t Serial_maxPayloadLength () {
 }
 #endif
 
-#ifdef CEU_FUN_Serial_getSource
-am_addr_t Serial_getSource (message_t* msg) {
+#ifdef CEU_FUN_Serial_source
+am_addr_t Serial_source (message_t* msg) {
     return call SerialAMPacket.source(msg);
 }
 #endif
@@ -187,8 +228,8 @@ void Serial_setSource (message_t* msg, am_addr_t addr) {
 }
 #endif
 
-#ifdef CEU_FUN_Serial_getDestination
-am_addr_t Serial_getDestination (message_t* msg) {
+#ifdef CEU_FUN_Serial_destination
+am_addr_t Serial_destination (message_t* msg) {
     return call SerialAMPacket.destination(msg);
 }
 #endif
@@ -199,8 +240,8 @@ void Serial_setDestination (message_t* msg, am_addr_t addr) {
 }
 #endif
 
-#ifdef CEU_FUN_Serial_getType
-am_id_t Serial_getType (message_t* msg) {
+#ifdef CEU_FUN_Serial_type
+am_id_t Serial_type (message_t* msg) {
     return call SerialAMPacket.type(msg);
 }
 #endif
@@ -208,6 +249,18 @@ am_id_t Serial_getType (message_t* msg) {
 #ifdef CEU_FUN_Serial_setType
 void Serial_setType (message_t* msg, am_id_t id) {
     call SerialAMPacket.setType(msg, id);
+}
+#endif
+
+#ifdef CEU_FUN_Serial_group
+am_group_t Serial_group (message_t* msg) {
+    return call SerialAMPacket.group(msg);
+}
+#endif
+
+#ifdef CEU_FUN_Serial_setGroup
+void Serial_setGroup (message_t* msg, am_group_t id) {
+    call SerialAMPacket.setGroup(msg, id);
 }
 #endif
 
@@ -220,6 +273,8 @@ int SERIAL_SEND (message_t *msg)  {
     return call SerialSend.send[id](addr, msg, len) == SUCCESS;
 }
 #endif
+
+#endif  // CEU_IO_SERIAL
 
 #ifdef CEU_FUN_Dissemination_start
 void Dissemination_start () {

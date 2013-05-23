@@ -10,8 +10,8 @@
 
 @include(radio.ceu)
 
-C _Cnt = 0;
-C do
+native _Cnt = 0;
+native do
     typedef struct {
         nx_uint16_t cnt;
     } Cnt;
@@ -32,11 +32,12 @@ event void retry;
 
 par do
     loop do
-        var _message_t* msg = await RADIO_RECEIVE;
+        var _radio_receive_t* recv = await RADIO_RECEIVE;
+        var _message_t* msg = *(recv:msg_ptr);
         var _Cnt* data = _Radio_getPayload(msg, sizeof<_Cnt>);
-        data:cnt = data:cnt + 1;
         _Leds_set(data:cnt);
         await 1s;
+        data:cnt = data:cnt + 1;
         _Radio_setDestination(msg, (_TOS_NODE_ID+1)%3);
         emit RADIO_SEND(msg);
     end

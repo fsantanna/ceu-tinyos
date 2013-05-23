@@ -18,27 +18,27 @@ module AppC @safe()
     uses interface Timer<TMilli> as TimerAsync;
 #endif
 
-#ifdef IO_LEDS
+#ifdef CEU_IO_LEDS
     uses interface Leds;
 #endif
-#ifdef IO_SOUNDER
+#ifdef CEU_IO_SOUNDER
     uses interface Mts300Sounder as Sounder;
 #endif
-#ifdef IO_PHOTO
+#ifdef CEU_IO_PHOTO
     uses interface Read<uint16_t> as Photo;
 #endif
-#ifdef IO_TEMP
+#ifdef CEU_IO_TEMP
     uses interface Read<uint16_t> as Temp;
 #endif
 
-#ifdef IO_RADIO
+#ifdef CEU_IO_RADIO
     uses interface AMSend       as RadioSend[am_id_t id];
     uses interface Receive      as RadioReceive[am_id_t id];
     uses interface Packet       as RadioPacket;
     uses interface AMPacket     as RadioAMPacket;
     uses interface SplitControl as RadioControl;
 #endif
-#ifdef IO_SERIAL
+#ifdef CEU_IO_SERIAL
     uses interface AMSend       as SerialSend[am_id_t id];
     uses interface Receive      as SerialReceive[am_id_t id];
     uses interface Packet       as SerialPacket;
@@ -46,7 +46,7 @@ module AppC @safe()
     uses interface SplitControl as SerialControl;
 #endif
 
-#ifdef IO_DISSEMINATION
+#ifdef CEU_IO_DISSEMINATION
     uses interface StdControl as Dissemination;
     uses interface DisseminationValue<uint16_t>  as DisseminationValue1;
     uses interface DisseminationUpdate<uint16_t> as DisseminationUpdate1;
@@ -66,8 +66,8 @@ implementation
     {
         old = call Timer.getNow();
         ceu_go_init();
-#ifdef IN_START
-        ceu_go_event(IN_START, NULL);
+#ifdef CEU_IN_START
+        ceu_go_event(CEU_IN_START, NULL);
 #endif
 
         // TODO: periodic nunca deixaria TOSSched queue vazia
@@ -94,100 +94,106 @@ implementation
     event void TimerAsync.fired ()
     {
         call TimerAsync.startOneShot(10);
-        ceu_go_async(NULL,NULL);
+        ceu_go_async();
     }
 #endif
 
-#ifdef IO_PHOTO
+#ifdef CEU_IO_PHOTO
     event void Photo.readDone(error_t err, uint16_t val) {
-        ceu_go_event(IN_PHOTO_READDONE, (void*)val);
+        ceu_go_event(CEU_IN_PHOTO_READDONE, (void*)val);
     }
-#endif // IO_PHOTO
+#endif // CEU_IO_PHOTO
 
-#ifdef IO_TEMP
+#ifdef CEU_IO_TEMP
     event void Temp.readDone(error_t err, uint16_t val) {
-        ceu_go_event(IN_TEMP_READDONE, (void*)val);
+        ceu_go_event(CEU_IN_TEMP_READDONE, (void*)val);
     }
-#endif // IO_TEMP
+#endif // CEU_IO_TEMP
 
-#ifdef IO_RADIO
+#ifdef CEU_IO_RADIO
     event void RadioControl.startDone (error_t err) {
-#ifdef IN_RADIO_STARTDONE
-        ceu_go_event(IN_RADIO_STARTDONE, (void*)(int)err);
+#ifdef CEU_IN_RADIO_STARTDONE
+        ceu_go_event(CEU_IN_RADIO_STARTDONE, (void*)(int)err);
 #endif
     }
 
     event void RadioControl.stopDone (error_t err) {
-#ifdef IN_RADIO_STOPDONE
-        ceu_go_event(IN_RADIO_STOPDONE, (void*)(int)err);
+#ifdef CEU_IN_RADIO_STOPDONE
+        ceu_go_event(CEU_IN_RADIO_STOPDONE, (void*)(int)err);
 #endif
     }
 
     event void RadioSend.sendDone[am_id_t id](message_t* msg, error_t err)
     {
         //dbg("APP", "sendDone: %d %d\n", data[0], data[1]);
-#ifdef IN_RADIO_SENDDONE
-        ceu_go_event(IN_RADIO_SENDDONE, (void*)(int)err);
+#ifdef CEU_IN_RADIO_SENDDONE
+        radio_senddone_t t = { msg, err };
+        ceu_go_event(CEU_IN_RADIO_SENDDONE, &t);
 #endif
     }
 
     event message_t* RadioReceive.receive[am_id_t id]
         (message_t* msg, void* payload, uint8_t nbytes)
     {
-#ifdef IN_RADIO_RECEIVE
-        ceu_go_event(IN_RADIO_RECEIVE, msg);
+#ifdef CEU_IN_RADIO_RECEIVE
+        radio_receive_t t = { &msg, nbytes };
+        ceu_go_event(CEU_IN_RADIO_RECEIVE, &t);
+        return *t.msg_ptr;
 #endif
         return msg;
     }
-#endif // IO_RADIO
+#endif // CEU_IO_RADIO
 
-#ifdef IO_SERIAL
+#ifdef CEU_IO_SERIAL
     event void SerialControl.startDone (error_t err)
     {
-#ifdef IN_SERIAL_STARTDONE
-        ceu_go_event(IN_SERIAL_STARTDONE, (void*)(int)err);
+#ifdef CEU_IN_SERIAL_STARTDONE
+        ceu_go_event(CEU_IN_SERIAL_STARTDONE, (void*)(int)err);
 #endif
     }
 
     event void SerialControl.stopDone (error_t err)
     {
-#ifdef IN_SERIAL_STOPDONE
-        ceu_go_event(IN_SERIAL_STOPDONE, (void*)(int)err);
+#ifdef CEU_IN_SERIAL_STOPDONE
+        ceu_go_event(CEU_IN_SERIAL_STOPDONE, (void*)(int)err);
 #endif
     }
 
     event void SerialSend.sendDone[am_id_t id](message_t* msg, error_t err)
     {
         //dbg("APP", "sendDone: %d %d\n", data[0], data[1]);
-#ifdef IN_SERIAL_SENDDONE
-        ceu_go_event(IN_SERIAL_SENDDONE, (void*)(int)err);
+#ifdef CEU_IN_SERIAL_SENDDONE
+        radio_senddone_t t = { msg, err };
+        ceu_go_event(CEU_IN_SERIAL_SENDDONE, &t);
 #endif
     }
     
     event message_t* SerialReceive.receive[am_id_t id]
         (message_t* msg, void* payload, uint8_t nbytes)
     {
-#ifdef IN_SERIAL_RECEIVE
-        ceu_go_event(IN_SERIAL_RECEIVE, msg);
+#ifdef CEU_IN_SERIAL_RECEIVE
+        serial_receive_t t = { &msg, nbytes };
+        ceu_go_event(CEU_IN_SERIAL_RECEIVE, &t);
+        return *t.msg_ptr;
 #endif
         return msg;
     }
 
-#endif // IO_SERIAL
+#endif // CEU_IO_SERIAL
 
-#ifdef IO_DISSEMINATION
+#ifdef CEU_IO_DISSEMINATION
 
     event void DisseminationValue1.changed () {
-#ifdef IN_DISSEMINATION_VALUE1
+#ifdef CEU_IN_DISSEMINATION_VALUE1
         const uint16_t* v = call DisseminationValue1.get();
-        ceu_go_event(IN_DISSEMINATION_VALUE1, v);
+        ceu_go_event(CEU_IN_DISSEMINATION_VALUE1, v);
 #endif
     }
 
     event void DisseminationValue2.changed () {
-#ifdef IN_DISSEMINATION_VALUE2
+#ifdef CEU_IN_DISSEMINATION_VALUE2
         const uint8_t* v = call DisseminationValue2.get();
-        ceu_go_event(IN_DISSEMINATION_VALUE2, v);
+        ceu_go_event(CEU_IN_DISSEMINATION_VALUE2, v);
 #endif
     }
 

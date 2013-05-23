@@ -3,15 +3,15 @@
 changequote(<,>)
 changequote(`,´)
 
-C constant _FAIL, _EBUSY, _ESIZE, _SUCCESS, _TOS_NODE_ID;
+native constant _FAIL, _EBUSY, _ESIZE, _SUCCESS, _TOS_NODE_ID;
 
-C nohold _DBG();
-C _Photo_read();
+native nohold _DBG();
+native _Photo_read();
 
-C nohold _Leds_set();
-C nohold _Leds_led0Toggle(), _Leds_led0On(), _Leds_led0Off();
-C nohold _Leds_led1Toggle(), _Leds_led1On(), _Leds_led1Off();
-C nohold _Leds_led2Toggle(), _Leds_led2On(), _Leds_led2Off();
+native nohold _Leds_set();
+native nohold _Leds_led0Toggle(), _Leds_led0On(), _Leds_led0Off();
+native nohold _Leds_led1Toggle(), _Leds_led1On(), _Leds_led1Off();
+native nohold _Leds_led2Toggle(), _Leds_led2On(), _Leds_led2Off();
 
 deterministic _Leds_led0Toggle with _Leds_led1Toggle, _Leds_led1On, _Leds_led1Off,
                                     _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
@@ -31,19 +31,19 @@ deterministic RADIO_SEND with
 
 // TODO: many others
 
-C _uint8_t = 1;
+native _uint8_t = 1;
 
 // radio & serial
-C _nx_int8_t   =  8;
-C _nx_uint8_t  =  8;
-C _nx_int16_t  = 16;
-C _nx_uint16_t = 16;
-C _nx_int32_t  = 32;
-C _nx_uint32_t = 32;
-C _message_t   = 52;     // TODO: assumes CC2420
-C _am_addr_t   = 16;
+native _nx_int8_t   =  8;
+native _nx_uint8_t  =  8;
+native _nx_int16_t  = 16;
+native _nx_uint16_t = 16;
+native _nx_int32_t  = 32;
+native _nx_uint32_t = 32;
+native _message_t   = 52;     // TODO: assumes CC2420
+native _am_addr_t   = 16;
 
-C constant _AM_BROADCAST_ADDR;
+native constant _AM_BROADCAST_ADDR;
 
 @define(TOS_retry, `/*{-{*/
 dnl [ 1: timeout ] retry timeout

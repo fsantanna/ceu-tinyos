@@ -21,22 +21,22 @@ implementation
     components new TimerMilliC() as TimerAsync;
 #endif
 
-#ifdef IO_LEDS
+#ifdef CEU_IO_LEDS
     components LedsC;
 #endif
-#ifdef IO_SOUNDER
+#ifdef CEU_IO_SOUNDER
     components SounderC;
 #endif
-#ifdef IO_PHOTO
+#ifdef CEU_IO_PHOTO
     components new PhotoC();
 #endif
-#ifdef IO_TEMP
+#ifdef CEU_IO_TEMP
     components new TempC();
 #endif
-#ifdef IO_RADIO
+#ifdef CEU_IO_RADIO
     components ActiveMessageC as Radio;
 #endif
-#ifdef IO_SERIAL
+#ifdef CEU_IO_SERIAL
     components SerialActiveMessageC as Serial;
 #endif
 
@@ -47,20 +47,20 @@ implementation
     AppC.TimerAsync -> TimerAsync;
 #endif
 
-#ifdef IO_LEDS
+#ifdef CEU_IO_LEDS
     AppC.Leds  -> LedsC;
 #endif
-#ifdef IO_SOUNDER
+#ifdef CEU_IO_SOUNDER
     AppC.Sounder -> SounderC ;
 #endif
-#ifdef IO_PHOTO
+#ifdef CEU_IO_PHOTO
     AppC.Photo -> PhotoC;
 #endif
-#ifdef IO_TEMP
+#ifdef CEU_IO_TEMP
     AppC.Temp -> TempC;
 #endif
 
-#ifdef IO_RADIO
+#ifdef CEU_IO_RADIO
     AppC.RadioSend     -> Radio.AMSend;
     AppC.RadioReceive  -> Radio.Receive;
     AppC.RadioPacket   -> Radio.Packet;
@@ -68,7 +68,7 @@ implementation
     AppC.RadioControl  -> Radio.SplitControl;
 #endif
     
-#ifdef IO_SERIAL
+#ifdef CEU_IO_SERIAL
     AppC.SerialSend     -> Serial.AMSend;
     AppC.SerialReceive  -> Serial.Receive;
     AppC.SerialPacket   -> Serial.Packet;
@@ -76,7 +76,7 @@ implementation
     AppC.SerialControl  -> Serial.SplitControl;
 #endif
 
-#ifdef IO_DISSEMINATION
+#ifdef CEU_IO_DISSEMINATION
     components DisseminationC;
     AppC.Dissemination -> DisseminationC;
 
