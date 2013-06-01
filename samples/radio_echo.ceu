@@ -20,14 +20,16 @@ end
 
 par do
     loop do
-        var _radio_receive_t* recv = await RADIO_RECEIVE;
-        var _Msg* msg_recv = _Radio_getPayload(*(recv:msg_ptr),0);
+        var _message_t** msg_ptr;
+        var u8 len;
+        (msg_ptr, len) = await RADIO_RECEIVE;
+        var _Msg* msg_recv = _Radio_getPayload(*msg_ptr,0);
         _Leds_set(msg_recv:cnt);
     end
 
 with
     var _message_t pkt_send;
-    var _Msg* msg_send = _Radio_getPayload(&pkt_send, sizeof<_Msg>);
+    var _Msg* msg_send = _Radio_getPayload(&pkt_send, sizeof(_Msg));
     msg_send:cnt = 0;
 
     loop do
@@ -36,10 +38,14 @@ with
 
         loop do
             _Radio_setDestination(&pkt_send, _AM_BROADCAST_ADDR);
-            _Radio_setPayloadLength(&pkt_send, sizeof<_Msg>);
-            if emit RADIO_SEND(&pkt_send) then
+            _Radio_setPayloadLength(&pkt_send, sizeof(_Msg));
+
+            var int err;
+            emit RADIO_SEND => (&pkt_send,&err);
+            if err == _SUCCESS then
                 break;
             end
+
             await 1s;
         end
     end

@@ -6,6 +6,7 @@
                                 call Timer.startOneShot((us)/1000); }
                             // TODO: "binary" time
 
+#include <message.h>
 #include "IO.h"
 #include "Timer.h"
 
@@ -127,7 +128,7 @@ implementation
     {
         //dbg("APP", "sendDone: %d %d\n", data[0], data[1]);
 #ifdef CEU_IN_RADIO_SENDDONE
-        radio_senddone_t t = { msg, err };
+        tceu__message_t___int t = { msg, err };
         ceu_go_event(CEU_IN_RADIO_SENDDONE, &t);
 #endif
     }
@@ -136,9 +137,9 @@ implementation
         (message_t* msg, void* payload, uint8_t nbytes)
     {
 #ifdef CEU_IN_RADIO_RECEIVE
-        radio_receive_t t = { &msg, nbytes };
+        tceu__message_t____int t = { &msg, nbytes };
         ceu_go_event(CEU_IN_RADIO_RECEIVE, &t);
-        return *t.msg_ptr;
+        return *t._1;
 #endif
         return msg;
     }
@@ -163,7 +164,7 @@ implementation
     {
         //dbg("APP", "sendDone: %d %d\n", data[0], data[1]);
 #ifdef CEU_IN_SERIAL_SENDDONE
-        radio_senddone_t t = { msg, err };
+        tceu__message_t___int t = { msg, err };
         ceu_go_event(CEU_IN_SERIAL_SENDDONE, &t);
 #endif
     }
@@ -172,7 +173,7 @@ implementation
         (message_t* msg, void* payload, uint8_t nbytes)
     {
 #ifdef CEU_IN_SERIAL_RECEIVE
-        serial_receive_t t = { &msg, nbytes };
+        tceu__message_t____int t = { &msg, nbytes };
         ceu_go_event(CEU_IN_SERIAL_RECEIVE, &t);
         return *t.msg_ptr;
 #endif

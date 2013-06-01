@@ -75,16 +75,6 @@ int Temp_read () {
 // RADIO
 #ifdef CEU_IO_RADIO
 
-typedef struct {
-    message_t* msg;
-    error_t    error;
-} radio_senddone_t;
-
-typedef struct {
-    message_t** msg_ptr;
-    u8          len;
-} radio_receive_t;
-
 int Radio_start_on = 1;
 
 error_t Radio_start () {
@@ -150,11 +140,14 @@ void Radio_setGroup (message_t* msg, am_group_t id) {
 
 #ifdef CEU_OUT_RADIO_SEND
 #define ceu_out_event_RADIO_SEND RADIO_SEND
-int RADIO_SEND (message_t *msg)  {
-    am_id_t id     = call RadioAMPacket.type(msg);
-    am_addr_t addr = call RadioAMPacket.destination(msg);
-    int len        = call RadioPacket.payloadLength(msg);
-    return call RadioSend.send[id](addr, msg, len) == SUCCESS;
+void RADIO_SEND (tceu__message_t___int_* p)  {
+    am_id_t id     = call RadioAMPacket.type(p->_1);
+    am_addr_t addr = call RadioAMPacket.destination(p->_1);
+    int len        = call RadioPacket.payloadLength(p->_1);
+
+    error_t err = call RadioSend.send[id](addr, p->_1, len);
+    if (p->_2 != NULL)
+        *p->_2 = err;
 }
 #endif
 
@@ -162,16 +155,6 @@ int RADIO_SEND (message_t *msg)  {
 
 // SERIAL
 #ifdef CEU_IO_SERIAL
-
-typedef struct {
-    message_t* msg;
-    error_t    error;
-} serial_senddone_t;
-
-typedef struct {
-    message_t** msg_ptr;
-    u8          len;
-} serial_receive_t;
 
 int Serial_start_on = 1;
 
@@ -266,11 +249,13 @@ void Serial_setGroup (message_t* msg, am_group_t id) {
 
 #ifdef CEU_OUT_SERIAL_SEND
 #define ceu_out_event_SERIAL_SEND SERIAL_SEND
-int SERIAL_SEND (message_t *msg)  {
-    am_id_t id     = call SerialAMPacket.type(msg);
-    am_addr_t addr = call SerialAMPacket.destination(msg);
-    int len        = call SerialPacket.payloadLength(msg);
-    return call SerialSend.send[id](addr, msg, len) == SUCCESS;
+void SERIAL_SEND (tceu__message_t___int_* p)  {
+    am_id_t id     = call SerialAMPacket.type(p->_1);
+    am_addr_t addr = call SerialAMPacket.destination(p->_1);
+    int len        = call SerialPacket.payloadLength(p->_1);
+    error_t err = call SerialSend.send[id](addr, p->_1, len);
+    if (p->_2 != NULL)
+        *p->_2 = err;
 }
 #endif
 

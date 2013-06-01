@@ -7,6 +7,7 @@ typedef uint16_t u16;
 typedef int8_t    s8;
 typedef uint8_t   u8;
 
+#include <message.h>
 #include "IO.h"
 
 configuration AppAppC

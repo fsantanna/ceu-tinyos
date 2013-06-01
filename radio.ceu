@@ -9,12 +9,10 @@ changequote(`,´)
 
 native nohold _memcpy();
 
-native _radio_senddone_t, _radio_receive_t;
-
-input  int                RADIO_STARTDONE;
-input  _radio_senddone_t* RADIO_SENDDONE;
-input  _radio_receive_t*  RADIO_RECEIVE;
-output _message_t*        RADIO_SEND;
+input  int                  RADIO_STARTDONE;
+input  (_message_t*,  int)  RADIO_SENDDONE;
+input  (_message_t**, int)  RADIO_RECEIVE;
+output (_message_t*,  int*) RADIO_SEND;
 
 native _Radio_start_on;
 

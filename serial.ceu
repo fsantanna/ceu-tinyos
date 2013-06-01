@@ -9,12 +9,10 @@ changequote(`,´)
 
 native nohold _memcpy();
 
-native _serial_senddone_t, _serial_receive_t;
-
-input  int                 SERIAL_STARTDONE;
-input  _serial_senddone_t* SERIAL_SENDDONE;
-input  _serial_receive_t*  SERIAL_RECEIVE;
-output _message_t*         SERIAL_SEND;
+input  int                  SERIAL_STARTDONE;
+input  (_message_t*,  int)  SERIAL_SENDDONE;
+input  (_message_t**, int)  SERIAL_RECEIVE;
+output (_message_t*,  int*) SERIAL_SEND;
 
 native _Serial_start_on;
 
