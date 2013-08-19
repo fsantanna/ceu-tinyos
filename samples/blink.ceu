@@ -1,4 +1,4 @@
-@include(tinyos.ceu)
+#include "tinyos.ceu"
 
 par do
     loop do

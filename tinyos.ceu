@@ -1,7 +1,5 @@
-/*{-{*/
-
-changequote(<,>)
-changequote(`,´)
+#ifndef _TINYOS_CEU
+#define _TINYOS_CEU
 
 native constant _FAIL, _EBUSY, _ESIZE, _SUCCESS, _TOS_NODE_ID;
 
@@ -13,20 +11,20 @@ native nohold _Leds_led0Toggle(), _Leds_led0On(), _Leds_led0Off();
 native nohold _Leds_led1Toggle(), _Leds_led1On(), _Leds_led1Off();
 native nohold _Leds_led2Toggle(), _Leds_led2On(), _Leds_led2Off();
 
-deterministic _Leds_led0Toggle with _Leds_led1Toggle, _Leds_led1On, _Leds_led1Off,
-                                    _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
-deterministic _Leds_led0On     with _Leds_led1Toggle, _Leds_led1On, _Leds_led1Off,
-                                    _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
-deterministic _Leds_led0Off    with _Leds_led1Toggle, _Leds_led1On, _Leds_led1Off,
-                                    _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
-deterministic _Leds_led1Toggle with _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
-deterministic _Leds_led1On     with _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
-deterministic _Leds_led1Off    with _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
+safe _Leds_led0Toggle with _Leds_led1Toggle, _Leds_led1On, _Leds_led1Off,
+                           _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
+safe _Leds_led0On     with _Leds_led1Toggle, _Leds_led1On, _Leds_led1Off,
+                           _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
+safe _Leds_led0Off    with _Leds_led1Toggle, _Leds_led1On, _Leds_led1Off,
+                           _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
+safe _Leds_led1Toggle with _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
+safe _Leds_led1On     with _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
+safe _Leds_led1Off    with _Leds_led2Toggle, _Leds_led2On, _Leds_led2Off;
 
-deterministic _Radio_setDestination with
+safe _Radio_setDestination with
                 _Leds_set, _Leds_led0Toggle;
 
-deterministic RADIO_SEND with
+safe RADIO_SEND with
                 _Leds_set, _Leds_led0Toggle;
 
 // TODO: many others
@@ -45,16 +43,4 @@ native _am_addr_t   = 16;
 
 native constant _AM_BROADCAST_ADDR;
 
-@define(TOS_retry, `/*{-{*/
-dnl [ 1: timeout ] retry timeout
-dnl [ 2: cmd     ] Ceu code
-loop do
-    var int err_retry = $2;
-    if err_retry == _SUCCESS then
-        break;
-    end
-    await $1;
-end
-/*}-}*/´)
-
-/*}-}*/dnl
+#endif
