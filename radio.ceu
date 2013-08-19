@@ -1,13 +1,7 @@
-/*{-{*/
+#ifndef _TINYOS_RADIO_CEU
+#define _TINYOS_RADIO_CEU
 
-changequote(<,>)
-changequote(`,´)
-
-@include(tinyos.ceu)
-
-@define(AM_TYPE_ACK, 0);
-
-native nohold _memcpy();
+#include "tinyos.ceu"
 
 input  int                  RADIO_STARTDONE;
 input  (_message_t*,  int)  RADIO_SENDDONE;
@@ -27,5 +21,4 @@ native pure _Radio_getPayload(), _Radio_maxPayloadLength(),
 // TODO
 //deterministic _Radio_setDestination with _Leds_set, _Leds_led0Toggle;
 
-
-/*}-}*/dnl
+#endif

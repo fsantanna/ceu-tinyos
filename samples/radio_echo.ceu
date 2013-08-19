@@ -1,4 +1,4 @@
-@include(radio.ceu)
+#include "radio.ceu"
 
 native _Msg = 2;
 native do

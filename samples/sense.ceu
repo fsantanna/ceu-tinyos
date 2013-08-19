@@ -1,4 +1,4 @@
-@include(tinyos.ceu);
+#include "tinyos.ceu";
 
 input int PHOTO_READDONE;
 
