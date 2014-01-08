@@ -147,7 +147,7 @@ void RADIO_SEND (tceu__message_t___int_* p)  {
 
     error_t err = call RadioSend.send[id](addr, p->_1, len);
     if (p->_2 != NULL)
-        *p->_2 = err;
+        *(p->_2) = err;
 }
 #endif
 
