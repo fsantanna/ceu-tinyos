@@ -1,6 +1,5 @@
 #include "radio.ceu"
 
-native _Msg = 2;
 native do
     typedef struct {
         nx_uint16_t cnt;
