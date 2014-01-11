@@ -140,7 +140,7 @@ void Radio_setGroup (message_t* msg, am_group_t id) {
 
 #ifdef CEU_OUT_RADIO_SEND
 #define ceu_out_event_RADIO_SEND RADIO_SEND
-void RADIO_SEND (tceu__message_t___int_* p)  {
+void RADIO_SEND (tceu___message_t____int_* p)  {
     am_id_t id     = call RadioAMPacket.type(p->_1);
     am_addr_t addr = call RadioAMPacket.destination(p->_1);
     int len        = call RadioPacket.payloadLength(p->_1);
@@ -249,7 +249,7 @@ void Serial_setGroup (message_t* msg, am_group_t id) {
 
 #ifdef CEU_OUT_SERIAL_SEND
 #define ceu_out_event_SERIAL_SEND SERIAL_SEND
-void SERIAL_SEND (tceu__message_t___int_* p)  {
+void SERIAL_SEND (tceu___message_t____int_* p)  {
     am_id_t id     = call SerialAMPacket.type(p->_1);
     am_addr_t addr = call SerialAMPacket.destination(p->_1);
     int len        = call SerialPacket.payloadLength(p->_1);
