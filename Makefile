@@ -15,9 +15,9 @@ BUILD_EXTRA_DEPS += ceu
 include $(MAKERULES)
 
 ceu:
-	@echo "===================================================================="
-	ceu $(CEUFILE) --m4 --tp-word 2 --defs-file _ceu_defs.h
-	@echo "===================================================================="
+	@echo "================================"
+	ceu $(CEUFILE) --tp-word 2
+	@echo "================================"
 
 ceu_clean:
 	cd simul && make clean

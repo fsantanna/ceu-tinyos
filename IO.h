@@ -1,7 +1,7 @@
 #ifndef CEU_IO_h
 #define CEU_IO_h
 
-#include "_ceu_defs.h"
+#include "_ceu_app.h"
 
 #if defined(CEU_FUN_Leds_led0Off) || defined(CEU_FUN_Leds_led1Off) || \
     defined(CEU_FUN_Leds_led2Off) || defined(CEU_FUN_Leds_led0On)  || \
