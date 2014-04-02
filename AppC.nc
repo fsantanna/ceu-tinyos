@@ -80,7 +80,7 @@ implementation
 #endif
 
         // TODO: periodic nunca deixaria TOSSched queue vazia
-#ifndef ceu_out_wclock
+#ifndef ceu_out_wclock_set
         call Timer.startOneShot(10);
 #endif
 #ifdef CEU_ASYNCS
@@ -94,7 +94,7 @@ implementation
         s32 dt = now - old;
         old = now;
         ceu_sys_go(&app, CEU_IN__WCLOCK, (tceu_evtp)(dt*1000));
-#ifndef ceu_out_wclock
+#ifndef ceu_out_wclock_set
         call Timer.startOneShot(10);
 #endif
     }
