@@ -1,13 +1,7 @@
-/*{-{*/
+#ifndef _TINYOS_SERIAL_CEU
+#define _TINYOS_SERIAL_CEU
 
-changequote(<,>)
-changequote(`,´)
-
-@include(tinyos.ceu)
-
-@define(AM_TYPE_ACK, 0);
-
-native nohold _memcpy();
+#include "tinyos.ceu"
 
 input  int                  SERIAL_STARTDONE;
 input  (_message_t*,  int)  SERIAL_SENDDONE;
@@ -27,5 +21,4 @@ native pure _Serial_getPayload(), _Serial_maxPayloadLength(),
 // TODO
 //deterministic _Serial_setDestination with _Leds_set, _Leds_led0Toggle;
 
-
-/*}-}*/dnl
+#endif
