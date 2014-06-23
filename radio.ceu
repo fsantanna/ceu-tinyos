@@ -10,13 +10,13 @@ output (_message_t*,  int*) RADIO_SEND;
 
 native _Radio_start_on;
 
-native nohold _Radio_start(), _Radio_clear(),
+native @nohold _Radio_start(), _Radio_clear(),
          _Radio_setDestination(), _Radio_setPayloadLength(),
          _Radio_setSource(), _Radio_setType(), _Radio_setGroup();
 
-native pure _Radio_getPayload(), _Radio_maxPayloadLength(), 
-            _Radio_payloadLength(), _Radio_group(),
-            _Radio_source(), _Radio_type(), _Radio_destination();
+native @pure _Radio_getPayload(), _Radio_maxPayloadLength(),
+             _Radio_payloadLength(), _Radio_group(),
+             _Radio_source(), _Radio_type(), _Radio_destination();
 
 // TODO
 //deterministic _Radio_setDestination with _Leds_set, _Leds_led0Toggle;

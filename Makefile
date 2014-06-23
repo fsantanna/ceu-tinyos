@@ -2,7 +2,7 @@ NESCFILE ?= AppAppC
 CEUFILE  ?= samples/blink.ceu
 
 COMPONENT   = $(NESCFILE)
-#SENSORBOARD = mts300
+SENSORBOARD = mts300
 
 PFLAGS += -Wno-unused-variable -Wno-unused-label
 #PFLAGS += -fno-strict-aliasing # required for accessing VARS

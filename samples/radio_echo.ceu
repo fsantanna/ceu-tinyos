@@ -28,7 +28,7 @@ par do
 
 with
     var _message_t pkt_send;
-    var _Msg* msg_send = _Radio_getPayload(&pkt_send, sizeof(_Msg));
+    var _Msg[] msg_send = _Radio_getPayload(&pkt_send, sizeof(_Msg));
     msg_send:cnt = 0;
 
     loop do

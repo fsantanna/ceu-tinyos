@@ -136,7 +136,7 @@ implementation
     {
         //dbg("APP", "sendDone: %d %d\n", data[0], data[1]);
 #ifdef CEU_IN_RADIO_SENDDONE
-        tceu___message_t____int t = { msg, err };
+        tceu__message_t___int t = { msg, err };
         ceu_sys_go(&app, CEU_IN_RADIO_SENDDONE, (tceu_evtp)(void*)&t);
 #endif
     }
@@ -145,7 +145,7 @@ implementation
         (message_t* msg, void* payload, uint8_t nbytes)
     {
 #ifdef CEU_IN_RADIO_RECEIVE
-        tceu___message_t_____int t = { &msg, nbytes };
+        tceu__message_t____int t = { &msg, nbytes };
         ceu_sys_go(&app, CEU_IN_RADIO_RECEIVE, (tceu_evtp)(void*)&t);
         return *t._1;
 #endif
