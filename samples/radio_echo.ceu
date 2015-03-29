@@ -28,12 +28,12 @@ par do
 
 with
     var _message_t pkt_send;
-    var _Msg[] msg_send = _Radio_getPayload(&pkt_send, sizeof(_Msg));
-    msg_send:cnt = 0;
+    var _Msg&? msg_send = _Radio_getPayload(&pkt_send, sizeof(_Msg));
+    msg_send.cnt = 0;
 
     loop do
         await 2s;
-        msg_send:cnt = msg_send:cnt + 1;
+        msg_send.cnt = msg_send.cnt + 1;
 
         loop do
             _Radio_setDestination(&pkt_send, _AM_BROADCAST_ADDR);
