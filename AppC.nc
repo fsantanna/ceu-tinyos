@@ -110,26 +110,30 @@ implementation
 
 #ifdef CEU_IO_PHOTO
     event void Photo.readDone(error_t err, uint16_t val) {
-        ceu_sys_go(&app, CEU_IN_PHOTO_READDONE, &val);
+        int param = val;
+        ceu_sys_go(&app, CEU_IN_PHOTO_READDONE, &param);
     }
 #endif // CEU_IO_PHOTO
 
 #ifdef CEU_IO_TEMP
     event void Temp.readDone(error_t err, uint16_t val) {
-        ceu_sys_go(&app, CEU_IN_TEMP_READDONE, &val);
+        int param = val;
+        ceu_sys_go(&app, CEU_IN_TEMP_READDONE, &param);
     }
 #endif // CEU_IO_TEMP
 
 #ifdef CEU_IO_RADIO
     event void RadioControl.startDone (error_t err) {
 #ifdef CEU_IN_RADIO_STARTDONE
-        ceu_sys_go(&app, CEU_IN_RADIO_STARTDONE, &err);
+        int param = err;
+        ceu_sys_go(&app, CEU_IN_RADIO_STARTDONE, &param);
 #endif
     }
 
     event void RadioControl.stopDone (error_t err) {
 #ifdef CEU_IN_RADIO_STOPDONE
-        ceu_sys_go(&app, CEU_IN_RADIO_STOPDONE, &err);
+	int param = err;
+        ceu_sys_go(&app, CEU_IN_RADIO_STOPDONE, &param);
 #endif
     }
 
@@ -158,14 +162,16 @@ implementation
     event void SerialControl.startDone (error_t err)
     {
 #ifdef CEU_IN_SERIAL_STARTDONE
-        ceu_sys_go(&app, CEU_IN_SERIAL_STARTDONE, &err);
+	int param = err;
+        ceu_sys_go(&app, CEU_IN_SERIAL_STARTDONE, &param);
 #endif
     }
 
     event void SerialControl.stopDone (error_t err)
     {
 #ifdef CEU_IN_SERIAL_STOPDONE
-        ceu_sys_go(&app, CEU_IN_SERIAL_STOPDONE, &err);
+	int param = err;
+        ceu_sys_go(&app, CEU_IN_SERIAL_STOPDONE, &param);
 #endif
     }
 
@@ -195,15 +201,15 @@ implementation
 
     event void DisseminationValue1.changed () {
 #ifdef CEU_IN_DISSEMINATION_VALUE1
-        const uint16_t* v = call DisseminationValue1.get();
-        ceu_sys_go(&app, CEU_IN_DISSEMINATION_VALUE1, &v);
+        const uint16_t* param = call DisseminationValue1.get();
+        ceu_sys_go(&app, CEU_IN_DISSEMINATION_VALUE1, &param);
 #endif
     }
 
     event void DisseminationValue2.changed () {
 #ifdef CEU_IN_DISSEMINATION_VALUE2
-        const uint8_t* v = call DisseminationValue2.get();
-        ceu_sys_go(&app, CEU_IN_DISSEMINATION_VALUE2, &v);
+        const uint8_t* param = call DisseminationValue2.get();
+        ceu_sys_go(&app, CEU_IN_DISSEMINATION_VALUE2, &param);
 #endif
     }
 
