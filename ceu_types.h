@@ -1,8 +1,6 @@
 #ifndef CEU_TYPES_H
 #define CEU_TYPES_H
 
-#include "ceu_types.h"
-
 typedef unsigned int  word;
 typedef unsigned int  uint;
 typedef unsigned char byte;
@@ -19,5 +17,8 @@ typedef uint8_t   u8;
 
 typedef float    f32;
 typedef double   f64;
+
+void ceu_sys_log (int mode, long s) {
+}
 
 #endif
