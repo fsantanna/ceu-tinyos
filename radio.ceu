@@ -4,9 +4,9 @@
 #include "tinyos.ceu"
 
 input  int                  RADIO_STARTDONE;
-input  (_message_t*,  int)  RADIO_SENDDONE;
-input  (_message_t**, int)  RADIO_RECEIVE;
-output (_message_t*,  int*) RADIO_SEND;
+input  (_message_t&&,  int)  RADIO_SENDDONE;
+input  (_message_t&& &&, int)  RADIO_RECEIVE;
+output (_message_t&&,  int&&) RADIO_SEND;
 
 native _Radio_start_on;
 

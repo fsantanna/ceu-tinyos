@@ -4,6 +4,7 @@ CEUFILE  ?= samples/blink.ceu
 COMPONENT   = $(NESCFILE)
 SENSORBOARD = mts300
 
+CFLAGS +=-Wno-nesc-fnptr
 PFLAGS += -Wno-unused-variable -Wno-unused-label
 #PFLAGS += -fno-strict-aliasing # required for accessing VARS
 #PFLAGS += -DCC2420_DEF_RFPOWER=3

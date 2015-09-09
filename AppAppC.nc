@@ -1,5 +1,8 @@
 #include "ceu_types.h"
 
+#define ceu_out_assert(v)
+#define ceu_out_log(m,s)
+
 #include <message.h>
 #include "IO.h"
 

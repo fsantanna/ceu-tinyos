@@ -5,6 +5,6 @@ input int PHOTO_READDONE;
 loop do
     await 100ms;
     _Photo_read();
-    var int data = await PHOTO_READDONE;
-    _Leds_set(data/100);
+    var int v = await PHOTO_READDONE;
+    _Leds_set(v/100);
 end

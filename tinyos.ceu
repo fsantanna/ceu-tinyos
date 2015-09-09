@@ -40,5 +40,6 @@ native _message_t   = 52;     // TODO: assumes CC2420
 native _am_addr_t   = 16;
 
 native @const _AM_BROADCAST_ADDR;
+native @plain _message_t;
 
 #endif

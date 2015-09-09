@@ -33,20 +33,20 @@ event void retry;
 par do
     var _message_t msg;
     loop do
-        var _message_t** msg_ptr;
+        var _message_t&& &&  msg_ptr;
         var int len;    // TODO: not used
         (msg_ptr, len) = await RADIO_RECEIVE;
-        var _Cnt* rcv = _Radio_getPayload(*msg_ptr, sizeof(_Cnt));
+        var _Cnt&&  rcv = _Radio_getPayload(*msg_ptr, sizeof(_Cnt));
         var int cnt = rcv:cnt;
         _Leds_set(cnt);
 
         await 1s;
 
-        var _Cnt* snd = _Radio_getPayload(&msg, sizeof(_Cnt));
+        var _Cnt&&  snd = _Radio_getPayload(&&msg, sizeof(_Cnt));
         snd:cnt = cnt + 1;
-        _Radio_setDestination(&msg, (_TOS_NODE_ID+1)%3);
-        _Radio_setPayloadLength(&msg, sizeof(_Cnt));
-        emit RADIO_SEND => (&msg,null);
+        _Radio_setDestination(&&msg, (_TOS_NODE_ID+1)%3);
+        _Radio_setPayloadLength(&&msg, sizeof(_Cnt));
+        emit RADIO_SEND => (&&msg,null);
     end
 with
     loop do
@@ -72,11 +72,11 @@ with
     if _TOS_NODE_ID == 0 then
         loop do
             var _message_t msg;
-            var _Cnt* data = _Radio_getPayload(&msg, sizeof(_Cnt));
-            data:cnt = 1;
-            _Radio_setDestination(&msg, _TOS_NODE_ID+1);
-            _Radio_setPayloadLength(&msg, sizeof(_Cnt));
-            emit RADIO_SEND => (&msg,null);
+            var _Cnt&& v = _Radio_getPayload(&&msg, sizeof(_Cnt));
+            v:cnt = 1;
+            _Radio_setDestination(&&msg, _TOS_NODE_ID+1);
+            _Radio_setPayloadLength(&&msg, sizeof(_Cnt));
+            emit RADIO_SEND => (&&msg,null);
             await retry;
         end
     else
